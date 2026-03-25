@@ -1,75 +1,103 @@
-# ⚡ ProcrastiNO — Beat Procrastination
+ # ⚡ ProcrastiNO – AI Procrastination Breaker
 
-> Your AI procrastination breaker with Login & Signup
-
----
-
-## 🚀 How to Run (No Setup Required!)
-
-1. Download or clone this repo
-2. Double-click `index.html` to open in Chrome
-3. That's it — **no server, no Node.js, no install needed**
+> From overthinking → to action in just 5 minutes.
 
 ---
 
-## 📁 Project Structure
+## 🚀 Overview
 
-```
-procrastino/
-├── index.html                    ← Landing page + Dashboard (start here)
-├── login.html                    ← Login page
-├── signup.html                   ← Sign Up page
-├── style.css                     ← All styles
-├── script.js                     ← Auth logic (localStorage)
-└── procrastino_app_upgraded.html ← Main app (all 5 features)
-```
+ProcrastiNO is a student-focused productivity web app designed to help users overcome procrastination.
+Instead of overwhelming users with long task lists, it breaks tasks into **small, actionable steps** and encourages them to start with a simple **5-minute focus session**.
+
+---
+
+## 🎯 Problem
+
+Most students struggle with:
+
+* Procrastination and delay habits
+* Feeling overwhelmed by large tasks
+* Lack of motivation to start
+
+Existing tools like to-do lists and reminders fail because they focus on planning, not **starting behavior**.
+
+---
+
+## 💡 Solution
+
+ProcrastiNO focuses on **behavioral activation**:
+
+* Breaks tasks into tiny steps
+* Encourages starting with just 5 minutes
+* Reduces mental resistance
+* Builds momentum through small wins
 
 ---
 
 ## ✨ Features
 
-### Auth System
-- ✅ Sign Up with name, email, password
-- ✅ Login with email & password
-- ✅ Password strength meter (live)
-- ✅ Show/hide password toggle
-- ✅ Field-level validation with error messages
-- ✅ Session persistence (stays logged in)
-- ✅ Logout
-- ✅ 100% offline — uses `localStorage`
-
-### ProcrastiNO App (5 Upgraded Features)
-1. **🧠 Smart Nudge System** — Escalating nudges after 15s, 35s, 60s, 90s of idle time
-2. **📊 Tiny Progress Insight** — Rotating motivational insights on success screen
-3. **▶️ Continue Button** — "Continue for 5 more minutes" on success screen
-4. **👉 First Step Highlight** — Step 1 is visually highlighted with "START HERE" badge
-5. **🔍 Task Type Detection** — Detects task type (Study/Coding/Writing etc.) in real-time
+* 🧠 Smart Task Breakdown (step-by-step actions)
+* ⏱️ 5-Minute Focus Timer
+* 🔔 Motivational Quotes & Nudges
+* 🎯 Clean, distraction-free UI
+* 📊 Progress & Completion Feedback
 
 ---
 
-## 🔒 Data Storage
+## 🛠️ Tech Stack
 
-All data is stored in your **browser's localStorage**:
-- `pno_users` — user accounts (email + password)
-- `pno_session` — active session (email)
-- `pno_streak` — focus streak count
-
-> ⚠️ **Note:** This is a frontend-only demo. Passwords are stored in plain text in localStorage — not suitable for production. For a real app, use a backend with hashed passwords.
+* **Frontend:** HTML, CSS, JavaScript
+* **Design:** Glassmorphism UI + Animations
+* **Logic:** Vanilla JS (no frameworks)
 
 ---
 
-## 📤 GitHub Upload Steps
+## 🖥️ How to Run Locally
 
-1. Create a new repo on GitHub
-2. Upload all files (keep same folder structure)
-3. Go to **Settings → Pages → Source: main branch → / (root)**
-4. Your app will be live at `https://yourusername.github.io/repo-name/`
+1. Download or clone the repository
+2. Open `index.html` in your browser
+
+```bash
+git clone https://github.com/your-username/procrastino.git
+cd procrastino
+```
+
+3. Double-click `index.html` or open in browser
 
 ---
 
-## 🛠 Tech Stack
+## 🎥 Demo Flow
 
-- Pure HTML5, CSS3, JavaScript (ES6)
-- Google Fonts (Sora + DM Sans)
-- localStorage API
-- No frameworks, no build tools, no dependencies
+1. Enter a task (e.g., *Study for exam*)
+2. App breaks it into small steps
+3. Start the **5-minute focus mode**
+4. Complete session → get success feedback 🎉
+
+---
+
+## 🔮 Future Improvements
+
+* 🤖 AI-based dynamic task breakdown (API integration)
+* 📅 Calendar integration
+* 📈 Advanced progress tracking
+* 🔐 User login & streak system
+
+---
+
+## 🏆 Hackathon Project
+
+Built for **Rentits Global Hackathon 2026**
+Theme: *Student-life productivity tools*
+
+---
+
+## 💬 Key Insight
+
+> “Students don’t struggle with planning. They struggle with starting.”
+
+---
+
+## 🙌 Acknowledgements
+
+* Inspired by behavioral psychology & productivity research
+* Built with focus on real student problems
