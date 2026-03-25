@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProcrastiNO — Beat Procrastination</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#eef2ff;min-height:100vh;overflow-x:hidden}
+.app{min-height:600px;display:flex;flex-direction:column;align-items:center;padding:0 16px 40px;position:relative;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.3;pointer-events:none}
+.b1{width:380px;height:380px;background:#a78bfa;top:-100px;right:-80px;animation:bf 10s ease-in-out infinite alternate}
+.b2{width:300px;height:300px;background:#60a5fa;bottom:-60px;left:-60px;animation:bf 13s ease-in-out infinite alternate-reverse}
+.b3{width:200px;height:200px;background:#f0abfc;top:45%;left:40%;animation:bf 8s ease-in-out infinite alternate}
+@keyframes bf{0%{transform:translate(0,0) scale(1)}100%{transform:translate(20px,15px) scale(1.1)}}
+.screen{display:none;width:100%;max-width:460px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+.screen.active{display:flex;flex-direction:column;align-items:center;gap:16px}
+@keyframes pop{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.card{background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border-radius:22px;padding:32px 28px;width:100%;border:1px solid rgba(255,255,255,.95);box-shadow:0 6px 32px rgba(99,102,241,.1)}
+.brand{text-align:center;padding-top:24px}
+.logo{font-size:36px;animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.brand-name{font-family:'Sora',sans-serif;font-size:30px;font-weight:700;background:linear-gradient(135deg,#4f46e5,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px}
+.brand-sub{font-size:13px;color:#9ca3af;margin-top:3px}
+.streak-pill{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;font-size:13px;font-weight:600;padding:7px 18px;border-radius:50px;box-shadow:0 2px 10px rgba(251,191,36,.3)}
+
+/* ── FEATURE 5: Task Type Detection Label ── */
+.task-type-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#e0e7ff,#ede9fe);color:#4338ca;font-size:13px;font-weight:600;padding:8px 18px;border-radius:50px;margin-bottom:14px;border:1px solid rgba(99,102,241,.2);box-shadow:0 2px 10px rgba(99,102,241,.12);animation:fadein .4s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:#1e1b4b;margin-bottom:6px}
+.sub{font-size:14px;color:#6b7280;margin-bottom:18px;line-height:1.6}
+textarea{width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:15px;color:#1f2937;background:#fafafa;resize:none;line-height:1.6;font-family:'DM Sans',sans-serif;transition:border-color .2s,box-shadow .2s}
+textarea:focus{border-color:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.1);background:#fff;outline:none}
+.charcount{font-size:11px;color:#d1d5db;text-align:right;margin-top:4px;margin-bottom:12px}
+.btn{width:100%;padding:15px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:15px;font-weight:600;font-family:'Sora',sans-serif;border-radius:13px;border:none;cursor:pointer;box-shadow:0 4px 18px rgba(99,102,241,.4);transition:transform .18s,box-shadow .18s;letter-spacing:.01em}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(99,102,241,.55)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* ── FEATURE 3: Continue Button ── */
+.btn-continue{background:linear-gradient(135deg,#10b981,#059669);margin-bottom:10px;box-shadow:0 4px 18px rgba(16,185,129,.35)}
+.btn-continue:hover{box-shadow:0 8px 26px rgba(16,185,129,.5)}
+
+.btn-ghost{background:transparent;color:#6b7280;font-size:13px;font-weight:500;padding:8px 14px;border-radius:9px;border:none;cursor:pointer;transition:color .2s,background .2s}
+.btn-ghost:hover{color:#4f46e5;background:rgba(99,102,241,.07)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px}
+.chip{background:rgba(255,255,255,.8);border:1px solid #e5e7eb;color:#4b5563;font-size:13px;font-weight:500;padding:6px 14px;border-radius:50px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+.chip:hover{background:#fff;border-color:#6366f1;color:#4f46e5;box-shadow:0 2px 10px rgba(99,102,241,.15);transform:translateY(-1px)}
+.note{text-align:center;font-size:12px;color:#9ca3af;margin-top:10px}
+.progress-bar{display:flex;align-items:center;padding-top:22px;width:100%;max-width:460px;justify-content:center;gap:0;position:relative;z-index:10}
+.pstep{display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.3;transition:opacity .4s}
+.pstep.on{opacity:1}
+.pdot{width:30px;height:30px;border-radius:50%;background:#fff;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#9ca3af;transition:all .4s;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.pstep.on .pdot{background:linear-gradient(135deg,#6366f1,#8b5cf6);border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(99,102,241,.45)}
+.plabel{font-size:10px;font-weight:500;color:#6b7280;white-space:nowrap}
+.pstep.on .plabel{color:#4f46e5;font-weight:600}
+.pline{flex:1;height:2px;background:#e5e7eb;margin-bottom:18px;min-width:16px;transition:background .4s}
+.pline.on{background:linear-gradient(90deg,#6366f1,#8b5cf6)}
+.steps-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.step-li{display:flex;align-items:center;gap:11px;background:#f8f7ff;border:1.5px solid #e5e7eb;border-radius:13px;padding:13px 15px;cursor:pointer;transition:all .25s;opacity:0;transform:translateX(-14px)}
+.step-li.show{opacity:1;transform:none}
+.step-li:hover{border-color:#a5b4fc;background:#f0f0ff;transform:translateX(3px)}
+.step-li.done{background:#f0fdf4;border-color:#86efac}
+.step-li.done .step-txt{text-decoration:line-through;color:#9ca3af}
+
+/* ── FEATURE 4: Step 1 Highlight ── */
+.step-li.first-step{border:2px solid #6366f1;background:linear-gradient(135deg,#f0f0ff,#f5f3ff);box-shadow:0 4px 16px rgba(99,102,241,.15)}
+.step-li.first-step .snum{background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 3px 10px rgba(251,191,36,.5)}
+
+.snum{min-width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+.step-li.done .snum{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.step-txt{font-size:14px;color:#374151;flex:1;line-height:1.4}
+.start-badge{font-size:10px;font-weight:700;background:linear-gradient(135deg,#fde68a,#fbbf24);color:#92400e;padding:3px 10px;border-radius:50px;white-space:nowrap;flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+.enc-box{display:flex;align-items:flex-start;gap:9px;background:linear-gradient(135deg,#ede9fe,#e0e7ff);border-radius:11px;padding:13px 15px;margin-bottom:16px;font-size:13px;color:#4338ca;font-weight:500;line-height:1.5}
+.circle-wrap{position:relative;width:220px;height:220px;margin:0 auto 20px}
+.ring{display:block}
+.time-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.time-big{font-family:'Sora',sans-serif;font-size:44px;font-weight:700;color:#1e1b4b;letter-spacing:-2px;line-height:1;display:block}
+.time-big.urg{color:#dc2626;animation:tp 1s ease infinite}
+@keyframes tp{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.time-lbl{font-size:11px;color:#9ca3af;display:block;margin-top:3px}
+.time-done-icon{font-size:48px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.quote-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:13px;padding:14px 18px;margin-bottom:18px;text-align:center}
+.quote-txt{font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:#4338ca;line-height:1.4}
+.focus-badge{display:inline-block;background:linear-gradient(135deg,#ede9fe,#e0e7ff);color:#4f46e5;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:10px}
+.btn-pause{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.btn-resume{background:linear-gradient(135deg,#10b981,#059669)}
+.success-icon{font-size:48px;animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1);display:inline-block;margin-bottom:10px}
+@keyframes bounceIn{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.success-h{font-family:'Sora',sans-serif;font-size:26px;font-weight:700;background:linear-gradient(135deg,#16a34a,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.task-rem{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:11px;padding:11px 14px;margin-bottom:16px;font-size:13px;text-align:left}
+.task-rem span{color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:500;display:block;margin-bottom:3px}
+.task-rem strong{color:#166534}
+
+/* ── FEATURE 2: Tiny Progress Insight ── */
+.insight-box{background:linear-gradient(135deg,#dbeafe,#e0e7ff);border:1px solid rgba(99,102,241,.2);border-radius:13px;padding:14px 18px;margin-bottom:14px;text-align:center;animation:fadein .6s ease .3s both}
+.insight-emoji{font-size:28px;display:block;margin-bottom:6px}
+.insight-txt{font-family:'Sora',sans-serif;font-size:15px;font-weight:600;color:#1e40af;line-height:1.4;margin-bottom:4px}
+.insight-sub{font-size:12px;color:#6b7280;line-height:1.5}
+
+.streak-ring{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #fbbf24;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;position:relative;box-shadow:0 4px 16px rgba(251,191,36,.35);animation:sp 1.5s ease-in-out infinite}
+@keyframes sp{0%,100%{box-shadow:0 4px 16px rgba(251,191,36,.35)}50%{box-shadow:0 4px 28px rgba(251,191,36,.6)}}
+.streak-num{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;color:#92400e}
+.streak-fire{position:absolute;top:-7px;right:-3px;font-size:18px}
+.streak-dl{font-size:12px;font-weight:600;color:#b45309;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.streak-msg{font-size:13px;color:#6b7280;margin-bottom:14px}
+.badges{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:14px;min-height:10px}
+.badge{font-size:11px;font-weight:600;padding:4px 12px;border-radius:50px}
+.b-blue{background:#dbeafe;color:#1d4ed8}
+.b-purple{background:#ede9fe;color:#6d28d9}
+.b-gold{background:#fef3c7;color:#92400e}
+.b-green{background:#dcfce7;color:#166534}
+.next-box{background:#f8f7ff;border-radius:13px;padding:13px 15px;margin-bottom:16px;text-align:left}
+.next-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:9px}
+.next-item{display:flex;align-items:center;gap:9px;font-size:14px;color:#374151;padding:4px 0}
+.next-item span{font-size:15px}
+.foot-quote{font-size:11px;color:#d1d5db;font-style:italic;line-height:1.5;text-align:center;padding:0 8px;margin-top:4px}
+
+/* ── FEATURE 1: Smart Nudge System ── */
+.nudge{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(120px);background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;padding:14px 24px;border-radius:50px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(30,27,75,.45);z-index:1000;transition:transform .5s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:92vw;text-align:center;cursor:pointer}
+.nudge.show{transform:translateX(-50%) translateY(0)}
+.nudge-icon{margin-right:6px;font-size:15px}
+
+.err{font-size:13px;color:#ef4444;margin-bottom:10px;padding-left:2px}
+.confetti-wrap{position:absolute;top:80px;left:50%;transform:translateX(-50%);pointer-events:none;z-index:20}
+.cp{position:absolute;font-size:20px;animation:cfly 1.1s cubic-bezier(.25,.46,.45,.94) both}
+@keyframes cfly{from{opacity:1;transform:translate(0,0) scale(.5) rotate(0deg)}to{opacity:0;transform:translate(var(--tx),var(--ty)) scale(1.2) rotate(360deg)}}
+
+.sep{width:100%;height:1px;background:linear-gradient(90deg,transparent,#e5e7eb,transparent);margin:6px 0}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <div class="progress-bar" id="pbar" style="display:none">
+    <div class="pstep on" id="ps0"><div class="pdot">1</div><span class="plabel">Task</span></div>
+    <div class="pline" id="pl0"></div>
+    <div class="pstep" id="ps1"><div class="pdot">2</div><span class="plabel">Steps</span></div>
+    <div class="pline" id="pl1"></div>
+    <div class="pstep" id="ps2"><div class="pdot">3</div><span class="plabel">Focus</span></div>
+    <div class="pline" id="pl2"></div>
+    <div class="pstep" id="ps3"><div class="pdot">4</div><span class="plabel">Done</span></div>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div class="screen active" id="s-home">
+    <div class="brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-name">ProcrastiNO</div>
+      <div class="brand-sub">Your AI procrastination breaker</div>
+    </div>
+    <div id="streak-pill-home"></div>
+    <div class="card">
+      <h2>What are you avoiding? &#128584;</h2>
+      <p class="sub">Type your task. I'll break it into tiny steps so starting feels easy.</p>
+
+      <!-- FEATURE 5: Task Type Detection Label -->
+      <div id="task-type-label" style="display:none;margin-bottom:12px;text-align:center"></div>
+
+      <textarea id="task-input" rows="3" maxlength="200" placeholder="e.g. Study for math exam, Write my essay, Read chapter 3..."></textarea>
+      <div class="charcount"><span id="cc">0</span>/200</div>
+      <div class="err" id="err-msg" style="display:none">Tell me what you're avoiding — I'll make it easy.</div>
+      <button class="btn" id="break-btn" disabled onclick="goBreakdown()">Break task into steps &#8594;</button>
+      <p class="note">&#10024; No pressure. You only need to start for 5 minutes.</p>
+    </div>
+    <div style="text-align:center">
+      <p style="font-size:13px;color:#9ca3af;margin-bottom:8px">Try an example:</p>
+      <div class="chips">
+        <div class="chip" onclick="setEx('Write my essay')">Write my essay</div>
+        <div class="chip" onclick="setEx('Study for exam')">Study for exam</div>
+        <div class="chip" onclick="setEx('Read chapter 3')">Read chapter 3</div>
+        <div class="chip" onclick="setEx('Fix my code')">Fix my code</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BREAKDOWN SCREEN -->
+  <div class="screen" id="s-breakdown">
+    <div class="card">
+      <div style="position:relative;text-align:center;margin-bottom:20px">
+        <button class="btn-ghost" style="position:absolute;left:0;top:0" onclick="goHome()">&#8592; Back</button>
+        <div style="font-size:32px;margin-bottom:8px">&#128269;</div>
+        <h2>Here's your plan</h2>
+        <p style="font-size:13px;color:#6b7280;margin-top:4px">Task: <strong id="task-label" style="color:#4f46e5"></strong></p>
+        <!-- FEATURE 5 also appears here -->
+        <div id="detected-label-bd" style="margin-top:10px"></div>
+        <p style="font-size:13px;color:#9ca3af;margin-top:8px">&#128073; <strong style="color:#374151">Step 1 is highlighted</strong> — just do that.</p>
+      </div>
+      <ul class="steps-list" id="steps-list"></ul>
+      <div class="enc-box"><span style="font-size:18px">&#128172;</span><span>You don't need to do all of this. Just the first step unlocks momentum.</span></div>
+      <button class="btn" onclick="goTimer()">&#9201; Start 5-min focus mode</button>
+      <p class="note" style="margin-top:10px">Just 5 minutes. You can stop after if you want.</p>
+    </div>
+  </div>
+
+  <!-- TIMER SCREEN -->
+  <div class="screen" id="s-timer">
+    <div class="card" id="timer-card" style="text-align:center">
+      <div class="focus-badge">&#127919; Focus Mode</div>
+      <h2 style="margin-bottom:20px">You're in the zone</h2>
+      <div class="circle-wrap">
+        <svg class="ring" width="220" height="220">
+          <defs>
+            <linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#a855f7"/>
+            </linearGradient>
+            <linearGradient id="ug" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <circle cx="110" cy="110" r="95" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+          <circle id="ring-arc" cx="110" cy="110" r="95" fill="none" stroke="url(#ng)" stroke-width="8" stroke-linecap="round"
+            stroke-dasharray="596.9" stroke-dashoffset="596.9"
+            style="transition:stroke-dashoffset 1s linear;transform:rotate(-90deg);transform-origin:center"/>
+        </svg>
+        <div class="time-inner">
+          <span class="time-big" id="time-display">5:00</span>
+          <span class="time-lbl" id="time-lbl">minutes left</span>
+        </div>
+      </div>
+      <div class="quote-box" id="quote-box">
+        <div class="quote-txt" id="quote-txt">"Just start. Not perfect."</div>
+      </div>
+      <button class="btn btn-pause" id="pause-btn" onclick="togglePause()">&#9646;&#9646; Pause</button>
+      <p class="note" style="margin-top:12px">&#128245; Put your phone face-down. You've got this.</p>
+    </div>
+  </div>
+
+  <!-- SUCCESS SCREEN -->
+  <div class="screen" id="s-success">
+    <div class="confetti-wrap" id="confetti"></div>
+    <div class="card" style="text-align:center">
+      <div class="success-icon">&#127942;</div>
+      <div class="success-h">You started!</div>
+      <p class="sub">That's the hardest part.</p>
+      <div class="task-rem">
+        <span>You worked on:</span>
+        <strong id="success-task"></strong>
+      </div>
+
+      <!-- FEATURE 2: Tiny Progress Insight -->
+      <div class="insight-box" id="insight-box">
+        <span class="insight-emoji" id="insight-emoji">🎯</span>
+        <div class="insight-txt" id="insight-txt">You beat procrastination today!</div>
+        <div class="insight-sub" id="insight-sub">Most people quit before starting — you didn't.</div>
+      </div>
+
+      <div class="streak-ring">
+        <span class="streak-num" id="streak-num">1</span>
+        <span class="streak-fire">&#128293;</span>
+      </div>
+      <div class="streak-dl" id="streak-dl">Day 1 streak</div>
+      <div class="streak-msg" id="streak-msg">First session done! The hardest part is over.</div>
+      <div class="badges" id="badges-row"></div>
+
+      <!-- FEATURE 3: Continue Button -->
+      <button class="btn btn-continue" onclick="continueSession()">&#9654; Continue for 5 more minutes</button>
+
+      <div class="next-box">
+        <div class="next-lbl">What next?</div>
+        <div class="next-item"><span>&#9749;</span><span>Take a 5-minute break — you earned it</span></div>
+        <div class="next-item"><span>&#128203;</span><span>Review your next step in the plan</span></div>
+        <div class="next-item"><span>&#127381;</span><span>Tell someone what you accomplished</span></div>
+      </div>
+      <button class="btn" onclick="goHome()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">&#128640; Break another task</button>
+      <p class="foot-quote">"You don't have to be great to start, but you have to start to be great."</p>
+    </div>
+  </div>
+
+  <!-- FEATURE 1: Smart Nudge System -->
+  <div class="nudge" id="nudge" onclick="dismissNudge()">
+    <span class="nudge-icon">&#128161;</span><span id="nudge-text">Start with just 2 minutes</span>
+  </div>
+</div>
+
+<script>
+var TOTAL = 300;
+var secsLeft = TOTAL;
+var running = false;
+var timerInt = null;
+var quoteIdx = 0;
+var quoteInt = null;
+var currentTask = '';
+var currentSteps = [];
+var nudgeTimer = null;
+var nudgePhase = 0;
+var streak = parseInt(localStorage.getItem('pno_streak') || '0');
+var continueMode = false;
+
+var quotes = [
+  "Just start. Not perfect.",
+  "Progress over perfection.",
+  "One step at a time.",
+  "You're doing great.",
+  "Stay with it.",
+  "Almost there. Keep going."
+];
+
+// ── FEATURE 1: Smart Nudge Messages (escalating) ──
+var nudgeMessages = [
+  { icon: '&#128161;', text: 'Start with just 2 minutes' },
+  { icon: '&#128064;', text: 'Open the task. That\'s enough.' },
+  { icon: '&#9889;', text: 'You\'ve been here a while. One small move?' },
+  { icon: '&#128170;', text: 'Done is better than perfect. Begin.' }
+];
+
+var nudgeDelays = [15000, 35000, 60000, 90000];
+
+var stepSets = {
+  essay: ['&#128196; Open a blank doc and write the title','&#129504; Jot down 3 main points to cover','&#9997;&#65039; Write just the introduction paragraph','&#128204; Add bullet notes under each point','&#128260; Read once and fix one small thing'],
+  study: ['&#128218; Open your notes to the right chapter','&#128065;&#65039; Skim headings for an overview','&#128394;&#65039; Read and highlight 2 key concepts','&#128221; Write a 3-sentence summary','&#10067; Think of 1 question you still have'],
+  read: ['&#128214; Find your book and open it','&#128278; Start from where you left off','&#128196; Read just one full page','&#128161; Note one interesting thing you learned'],
+  code: ['&#128187; Open your editor and the file','&#128269; Read the last 10 lines you wrote','&#128296; Fix or write just one function','&#9654;&#65039; Run the code and note what happens'],
+  email: ['&#128231; Open your email app','&#128221; Write just the subject line','&#129513; Add 2-3 bullet points of what to say','&#9993;&#65039; Turn bullets into sentences and send'],
+  clean: ['&#129529; Pick one small area to tackle','&#128465;&#65039; Remove anything that doesn\'t belong','&#128230; Group similar items together','&#10024; Wipe the surface when done'],
+  default: ['&#128640; Open whatever you need for this task','&#9201; Spend 2 minutes getting familiar','&#9999;&#65039; Do the very first, smallest action','&#128203; Note what the next step would be']
+};
+
+// ── FEATURE 5: Task Type Detection ──
+var taskTypes = {
+  essay:  { label: 'Writing Task', emoji: '✍️', color: '#7c3aed' },
+  study:  { label: 'Study Task',   emoji: '📚', color: '#2563eb' },
+  read:   { label: 'Reading Task', emoji: '📖', color: '#0891b2' },
+  code:   { label: 'Coding Task',  emoji: '💻', color: '#059669' },
+  email:  { label: 'Communication Task', emoji: '📧', color: '#d97706' },
+  clean:  { label: 'Organization Task',  emoji: '🧹', color: '#dc2626' },
+  default:{ label: 'General Task', emoji: '🎯', color: '#6366f1' }
+};
+
+function detectType(task) {
+  var t = task.toLowerCase();
+  if (/essay|write|writing|paper/.test(t)) return 'essay';
+  if (/study|revise|revision|exam|test/.test(t)) return 'study';
+  if (/read|book|chapter|article/.test(t)) return 'read';
+  if (/code|coding|program|debug|build/.test(t)) return 'code';
+  if (/email|message|reply|contact/.test(t)) return 'email';
+  if (/clean|organiz|tidy|declutter/.test(t)) return 'clean';
+  return 'default';
+}
+
+function getSteps(task) {
+  return stepSets[detectType(task)];
+}
+
+function showTaskTypeLabel(task, containerId) {
+  var type = detectType(task);
+  var info = taskTypes[type];
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="task-type-badge" style="border-color:' + info.color + '20;color:' + info.color + ';background:linear-gradient(135deg,#f8f9ff,#eff0ff)">Detected: ' + info.label + ' ' + info.emoji + '</div>';
+  el.style.display = 'block';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  var isHome = id === 's-home';
+  document.getElementById('pbar').style.display = isHome ? 'none' : 'flex';
+  var map = {'s-home':0,'s-breakdown':1,'s-timer':2,'s-success':3};
+  var idx = map[id] || 0;
+  for (var i=0; i<4; i++) {
+    document.getElementById('ps'+i).classList.toggle('on', i <= idx);
+    if (i<3) document.getElementById('pl'+i).classList.toggle('on', i < idx);
+  }
+}
+
+function goHome() {
+  clearAllNudges();
+  startNudgeCycle();
+  showScreen('s-home');
+  var ta = document.getElementById('task-input');
+  ta.value = '';
+  document.getElementById('cc').textContent = '0';
+  document.getElementById('break-btn').disabled = true;
+  document.getElementById('err-msg').style.display = 'none';
+  document.getElementById('task-type-label').style.display = 'none';
+}
+
+function setEx(txt) {
+  var ta = document.getElementById('task-input');
+  ta.value = txt;
+  document.getElementById('cc').textContent = txt.length;
+  document.getElementById('break-btn').disabled = false;
+  document.getElementById('err-msg').style.display = 'none';
+  clearAllNudges();
+  showTaskTypeLabel(txt, 'task-type-label');
+}
+
+function goBreakdown() {
+  var val = document.getElementById('task-input').value.trim();
+  if (!val) { document.getElementById('err-msg').style.display = 'block'; return; }
+  document.getElementById('err-msg').style.display = 'none';
+  currentTask = val;
+  currentSteps = getSteps(val);
+  document.getElementById('task-label').textContent = '"' + val + '"';
+
+  // FEATURE 5 on breakdown screen
+  showTaskTypeLabel(val, 'detected-label-bd');
+
+  var list = document.getElementById('steps-list');
+  list.innerHTML = '';
+  currentSteps.forEach(function(step, i) {
+    var li = document.createElement('li');
+    // FEATURE 4: First step highlight
+    li.className = 'step-li' + (i === 0 ? ' first-step' : '');
+    li.innerHTML = '<div class="snum">' + (i+1) + '</div><span class="step-txt">' + step + '</span>' +
+      (i===0 ? '<span class="start-badge">&#9889; START HERE</span>' : '');
+    li.onclick = function() {
+      li.classList.toggle('done');
+      li.querySelector('.snum').textContent = li.classList.contains('done') ? '&#10003;' : (i+1);
+    };
+    list.appendChild(li);
+    setTimeout(function(){ li.classList.add('show'); }, i * 200 + 100);
+  });
+  showScreen('s-breakdown');
+}
+
+function goTimer() {
+  secsLeft = TOTAL;
+  running = true;
+  quoteIdx = 0;
+  clearInterval(timerInt);
+  clearInterval(quoteInt);
+  updateTimerDisplay();
+  showScreen('s-timer');
+  timerInt = setInterval(timerTick, 1000);
+  quoteInt = setInterval(function(){
+    quoteIdx = (quoteIdx + 1) % quotes.length;
+    document.getElementById('quote-txt').textContent = '"' + quotes[quoteIdx] + '"';
+  }, 50000);
+  document.getElementById('pause-btn').innerHTML = '&#9646;&#9646; Pause';
+  document.getElementById('pause-btn').className = 'btn btn-pause';
+  document.getElementById('pause-btn').style.display = 'block';
+}
+
+function timerTick() {
+  if (!running) return;
+  secsLeft--;
+  updateTimerDisplay();
+  if (secsLeft <= 0) {
+    clearInterval(timerInt);
+    clearInterval(quoteInt);
+    setTimeout(goSuccess, 1000);
+  }
+}
+
+function updateTimerDisplay() {
+  var m = Math.floor(secsLeft/60).toString().padStart(2,'0');
+  var s = (secsLeft%60).toString().padStart(2,'0');
+  var el = document.getElementById('time-display');
+  el.textContent = m + ':' + s;
+  var circ = 2 * Math.PI * 95;
+  var prog = (TOTAL - secsLeft) / TOTAL;
+  var arc = document.getElementById('ring-arc');
+  arc.style.strokeDashoffset = circ * (1 - prog);
+  var urgent = secsLeft <= 60;
+  el.className = 'time-big' + (urgent ? ' urg' : '');
+  arc.setAttribute('stroke', urgent ? 'url(#ug)' : 'url(#ng)');
+  if (secsLeft === 0) {
+    el.innerHTML = '&#10003;';
+    el.className = 'time-big';
+    el.style.color = '#22c55e';
+    document.getElementById('time-lbl').textContent = 'Done!';
+    document.getElementById('quote-box').style.opacity = '0';
+    document.getElementById('pause-btn').style.display = 'none';
+  }
+}
+
+function togglePause() {
+  running = !running;
+  var btn = document.getElementById('pause-btn');
+  if (running) {
+    btn.innerHTML = '&#9646;&#9646; Pause';
+    btn.className = 'btn btn-pause';
+  } else {
+    btn.innerHTML = '&#9654; Resume';
+    btn.className = 'btn btn-resume';
+  }
+}
+
+// ── FEATURE 3: Continue Session ──
+function continueSession() {
+  continueMode = true;
+  goTimer();
+}
+
+function goSuccess() {
+  clearInterval(timerInt);
+  clearInterval(quoteInt);
+
+  if (!continueMode) {
+    streak++;
+    localStorage.setItem('pno_streak', streak);
+  }
+  continueMode = false;
+
+  document.getElementById('success-task').textContent = '"' + currentTask + '"';
+  document.getElementById('streak-num').textContent = streak;
+  document.getElementById('streak-dl').textContent = 'Day ' + streak + ' streak';
+
+  var msgs = ['First session done! The hardest part is over.','You\'re building momentum. Keep it up!','Three days strong — you\'re on a roll!','A full week? You\'re unstoppable!','Two weeks of focus. You\'ve built a habit!'];
+  var mi = streak <= 1 ? 0 : streak <= 3 ? 1 : streak <= 5 ? 2 : streak <= 7 ? 3 : 4;
+  document.getElementById('streak-msg').textContent = msgs[mi];
+
+  var br = document.getElementById('badges-row');
+  br.innerHTML = '';
+  if (streak >= 1) br.innerHTML += '<span class="badge b-blue">First Focus &#9889;</span>';
+  if (streak >= 3) br.innerHTML += '<span class="badge b-purple">3-Day Club &#11088;</span>';
+  if (streak >= 7) br.innerHTML += '<span class="badge b-gold">Week Warrior &#127885;</span>';
+  if (streak >= 14) br.innerHTML += '<span class="badge b-green">Habit Hero &#127807;</span>';
+
+  // ── FEATURE 2: Dynamic Insight ──
+  var insights = [
+    { emoji: '🎯', txt: 'You beat procrastination today!', sub: 'Most people quit before starting — you didn\'t.' },
+    { emoji: '🔥', txt: '5 minutes = 1% progress', sub: 'Small wins build the biggest momentum.' },
+    { emoji: '🧠', txt: 'Your brain just rewired itself.', sub: 'Every session makes starting easier next time.' },
+    { emoji: '⚡', txt: 'You\'re in the top 10% today.', sub: '90% of people delay indefinitely. Not you.' },
+    { emoji: '🌱', txt: 'Habit forming in progress…', sub: 'It takes 21 days to build a habit. You\'re getting there!' }
+  ];
+  var ins = insights[Math.floor(Math.random() * insights.length)];
+  document.getElementById('insight-emoji').textContent = ins.emoji;
+  document.getElementById('insight-txt').textContent = ins.txt;
+  document.getElementById('insight-sub').textContent = ins.sub;
+
+  updateStreakPill();
+  showScreen('s-success');
+  setTimeout(fireConfetti, 300);
+}
+
+function fireConfetti() {
+  var wrap = document.getElementById('confetti');
+  wrap.innerHTML = '';
+  var items = ['&#127881;','&#11088;','&#127775;','&#10024;','&#127882;','&#128156;','&#128640;','&#127942;'];
+  items.forEach(function(e, i) {
+    var span = document.createElement('span');
+    span.className = 'cp';
+    span.innerHTML = e;
+    var angle = (i / items.length) * 360;
+    var rad = angle * Math.PI / 180;
+    var dist = 100 + Math.random() * 40;
+    span.style.setProperty('--tx', Math.round(Math.cos(rad) * dist) + 'px');
+    span.style.setProperty('--ty', Math.round(Math.sin(rad) * dist - 60) + 'px');
+    span.style.animationDelay = (i * 0.07) + 's';
+    wrap.appendChild(span);
+  });
+}
+
+function updateStreakPill() {
+  var el = document.getElementById('streak-pill-home');
+  if (streak > 0) {
+    el.innerHTML = '<div class="streak-pill">&#128293; ' + streak + '-day streak — keep going!</div>';
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+// ── FEATURE 1: Smart Nudge System ──
+var nudgeTimers = [];
+var nudgeShown = false;
+
+function startNudgeCycle() {
+  nudgeShown = false;
+  nudgePhase = 0;
+  scheduleNextNudge();
+}
+
+function scheduleNextNudge() {
+  if (nudgePhase >= nudgeMessages.length) return;
+  var delay = nudgeDelays[nudgePhase];
+  var t = setTimeout(function() {
+    if (!document.getElementById('s-home').classList.contains('active')) return;
+    var msg = nudgeMessages[nudgePhase];
+    document.getElementById('nudge').querySelector('.nudge-icon').innerHTML = msg.icon;
+    document.getElementById('nudge-text').textContent = msg.text;
+    document.getElementById('nudge').classList.add('show');
+    setTimeout(function(){
+      document.getElementById('nudge').classList.remove('show');
+    }, 5000);
+    nudgePhase++;
+    scheduleNextNudge();
+  }, delay);
+  nudgeTimers.push(t);
+}
+
+function clearAllNudges() {
+  nudgeTimers.forEach(clearTimeout);
+  nudgeTimers = [];
+  document.getElementById('nudge').classList.remove('show');
+  nudgeShown = false;
+  nudgePhase = 0;
+}
+
+function dismissNudge() {
+  document.getElementById('nudge').classList.remove('show');
+}
+
+// Input event listener
+document.getElementById('task-input').addEventListener('input', function() {
+  var v = this.value;
+  document.getElementById('cc').textContent = v.length;
+  document.getElementById('break-btn').disabled = !v.trim();
+  document.getElementById('err-msg').style.display = 'none';
+  clearAllNudges();
+  startNudgeCycle();
+  // FEATURE 5: show detection in real-time
+  if (v.trim().length > 3) {
+    showTaskTypeLabel(v.trim(), 'task-type-label');
+  } else {
+    document.getElementById('task-type-label').style.display = 'none';
+  }
+});
+
+// Reset nudge on any activity
+['mousemove','keydown','click','touchstart'].forEach(function(ev) {
+  window.addEventListener(ev, function(){
+    if (document.getElementById('s-home').classList.contains('active')) {
+      // Don't reset, let nudges escalate naturally — only reset on meaningful activity
+    }
+  });
+});
+
+updateStreakPill();
+startNudgeCycle();
+</script>
+</body>
+</html>

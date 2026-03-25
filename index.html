@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProcrastiNO — Beat Procrastination</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- ── LANDING PAGE ── -->
+  <div class="page active" id="page-landing">
+    <div class="card landing-card">
+      <div class="brand">
+        <span class="brand-logo">⚡</span>
+        <div class="brand-name">ProcrastiNO</div>
+        <div class="brand-tagline">Your AI procrastination breaker</div>
+      </div>
+
+      <div class="hero-text">Stop avoiding. Start doing.<br>5 minutes is all you need.</div>
+      <div class="hero-sub">Break any task into tiny, doable steps. Build streaks. Build momentum. Build habits.</div>
+
+      <div class="features">
+        <span class="feature-pill">🧠 Smart Nudges</span>
+        <span class="feature-pill">📊 Streak Tracking</span>
+        <span class="feature-pill">⚡ 5-Min Focus</span>
+      </div>
+
+      <div class="landing-btns">
+        <button class="btn-primary" onclick="showPage('page-signup')">Get Started Free →</button>
+        <button class="btn-outline" onclick="showPage('page-login')">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOGIN PAGE ── -->
+  <div class="page" id="page-login">
+    <div class="card">
+      <div class="brand">
+        <span class="brand-logo">⚡</span>
+        <div class="brand-name">ProcrastiNO</div>
+      </div>
+      <div class="page-title">Welcome back!</div>
+      <div class="page-sub">Sign in to continue your streak.</div>
+
+      <div id="login-alert" class="alert"></div>
+
+      <div data-form="login">
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="field-error" id="login-email-err"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="login-pw">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-pw" placeholder="Enter your password" autocomplete="current-password">
+            <button class="toggle-pw" type="button" onclick="togglePassword('login-pw', 'login-pw-toggle')" id="login-pw-toggle">👁️</button>
+          </div>
+          <div class="field-error" id="login-pw-err"></div>
+        </div>
+
+        <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In →</button>
+      </div>
+
+      <div class="nav-link" style="margin-top:20px">
+        Don't have an account? <button class="link-btn" onclick="showPage('page-signup')">Sign up free</button>
+      </div>
+      <div class="nav-link">
+        <button class="link-btn" onclick="showPage('page-landing')" style="color:#9ca3af;font-weight:400">← Back to home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SIGNUP PAGE ── -->
+  <div class="page" id="page-signup">
+    <div class="card">
+      <div class="brand">
+        <span class="brand-logo">⚡</span>
+        <div class="brand-name">ProcrastiNO</div>
+      </div>
+      <div class="page-title">Create your account</div>
+      <div class="page-sub">Start your procrastination-beating journey today.</div>
+
+      <div id="signup-alert" class="alert"></div>
+
+      <div data-form="signup">
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name">
+          </div>
+          <div class="field-error" id="signup-name-err"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="signup-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="field-error" id="signup-email-err"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="signup-pw">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="signup-pw" placeholder="At least 6 characters" autocomplete="new-password">
+            <button class="toggle-pw" type="button" onclick="togglePassword('signup-pw', 'signup-pw-toggle')" id="signup-pw-toggle">👁️</button>
+          </div>
+          <div class="field-error" id="signup-pw-err"></div>
+          <div class="pw-strength" id="signup-pw-strength">
+            <div class="pw-strength-bar"><div class="pw-strength-fill" id="signup-pw-fill"></div></div>
+            <div class="pw-strength-label" id="signup-pw-label"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="signup-pw2">Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔐</span>
+            <input type="password" id="signup-pw2" placeholder="Repeat your password" autocomplete="new-password">
+          </div>
+          <div class="field-error" id="signup-pw2-err"></div>
+        </div>
+
+        <button class="btn-primary" id="signup-btn" onclick="handleSignup()">Create Account →</button>
+      </div>
+
+      <div class="nav-link" style="margin-top:20px">
+        Already have an account? <button class="link-btn" onclick="showPage('page-login')">Sign in</button>
+      </div>
+      <div class="nav-link">
+        <button class="link-btn" onclick="showPage('page-landing')" style="color:#9ca3af;font-weight:400">← Back to home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DASHBOARD (post-login) ── -->
+  <div class="page" id="page-dashboard">
+    <div class="card" style="text-align:center">
+      <div class="brand">
+        <span class="brand-logo">⚡</span>
+        <div class="brand-name">ProcrastiNO</div>
+      </div>
+
+      <div style="font-size:52px;margin-bottom:12px;animation:logoPulse 2.5s ease-in-out infinite">👋</div>
+      <div class="page-title">Hello, <span id="dash-name">User</span>!</div>
+      <p style="font-size:14px;color:#6b7280;margin-bottom:6px" id="dash-email"></p>
+      <p style="font-size:13px;color:#9ca3af;margin-bottom:24px" id="dash-joined"></p>
+
+      <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:14px;padding:16px 20px;margin-bottom:24px">
+        <div style="font-size:22px;margin-bottom:4px">🔥</div>
+        <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:#92400e" id="dash-streak">No streak yet</div>
+      </div>
+
+      <a href="procrastino_app_upgraded.html" style="display:block;text-decoration:none;margin-bottom:12px">
+        <button class="btn-primary" style="width:100%">⚡ Open ProcrastiNO App</button>
+      </a>
+
+      <button class="btn-outline" onclick="handleLogout()" style="width:100%">Sign Out</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

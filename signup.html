@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — ProcrastiNO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+ 
+  <div class="page active" id="page-signup">
+    <div class="card">
+      <div class="brand">
+        <span class="brand-logo">⚡</span>
+        <div class="brand-name">ProcrastiNO</div>
+      </div>
+      <div class="page-title">Create your account</div>
+      <div class="page-sub">Start your procrastination-beating journey today.</div>
+ 
+      <div id="signup-alert" class="alert"></div>
+ 
+      <div data-form="signup">
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name">
+          </div>
+          <div class="field-error" id="signup-name-err"></div>
+        </div>
+ 
+        <div class="form-group">
+          <label for="signup-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="field-error" id="signup-email-err"></div>
+        </div>
+ 
+        <div class="form-group">
+          <label for="signup-pw">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="signup-pw" placeholder="At least 6 characters" autocomplete="new-password">
+            <button class="toggle-pw" type="button" onclick="togglePassword('signup-pw', 'signup-pw-toggle')" id="signup-pw-toggle">👁️</button>
+          </div>
+          <div class="field-error" id="signup-pw-err"></div>
+          <div class="pw-strength" id="signup-pw-strength">
+            <div class="pw-strength-bar"><div class="pw-strength-fill" id="signup-pw-fill"></div></div>
+            <div class="pw-strength-label" id="signup-pw-label"></div>
+          </div>
+        </div>
+ 
+        <div class="form-group">
+          <label for="signup-pw2">Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔐</span>
+            <input type="password" id="signup-pw2" placeholder="Repeat your password" autocomplete="new-password">
+          </div>
+          <div class="field-error" id="signup-pw2-err"></div>
+        </div>
+ 
+        <button class="btn-primary" id="signup-btn" onclick="handleSignup()">Create Account →</button>
+      </div>
+ 
+      <div class="nav-link" style="margin-top:20px">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+      <div class="nav-link">
+        <a href="index.html" style="color:#9ca3af;font-weight:400;font-size:13px">← Back to home</a>
+      </div>
+    </div>
+  </div>
+ 
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      window.showPage = function(id) {
+        if (id === 'page-login') { window.location.href = 'login.html'; return; }
+        if (id === 'page-landing') { window.location.href = 'index.html'; return; }
+        if (id === 'page-dashboard') { window.location.href = 'index.html'; return; }
+      };
+      if (getSession()) { window.location.href = 'index.html'; }
+      const signupPw = document.getElementById('signup-pw');
+      if (signupPw) signupPw.addEventListener('input', () => updateStrengthBar(signupPw.value));
+    });
+  </script>
+</body>
+</html>

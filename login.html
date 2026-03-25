@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — ProcrastiNO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+ 
+  <div class="page active" id="page-login">
+    <div class="card">
+      <div class="brand">
+        <span class="brand-logo">⚡</span>
+        <div class="brand-name">ProcrastiNO</div>
+      </div>
+      <div class="page-title">Welcome back!</div>
+      <div class="page-sub">Sign in to continue your streak.</div>
+ 
+      <div id="login-alert" class="alert"></div>
+ 
+      <div data-form="login">
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="field-error" id="login-email-err"></div>
+        </div>
+ 
+        <div class="form-group">
+          <label for="login-pw">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-pw" placeholder="Enter your password" autocomplete="current-password">
+            <button class="toggle-pw" type="button" onclick="togglePassword('login-pw', 'login-pw-toggle')" id="login-pw-toggle">👁️</button>
+          </div>
+          <div class="field-error" id="login-pw-err"></div>
+        </div>
+ 
+        <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In →</button>
+      </div>
+ 
+      <div class="nav-link" style="margin-top:20px">
+        Don't have an account? <a href="signup.html">Sign up free</a>
+      </div>
+      <div class="nav-link">
+        <a href="index.html" style="color:#9ca3af;font-weight:400;font-size:13px">← Back to home</a>
+      </div>
+    </div>
+  </div>
+ 
+  <script src="script.js"></script>
+  <script>
+    // Override redirect for standalone page
+    document.addEventListener('DOMContentLoaded', () => {
+      const orig = window.showPage;
+      window.showPage = function(id) {
+        if (id === 'page-signup') { window.location.href = 'signup.html'; return; }
+        if (id === 'page-landing') { window.location.href = 'index.html'; return; }
+        if (id === 'page-dashboard') { window.location.href = 'index.html'; return; }
+      };
+      if (getSession()) { window.location.href = 'index.html'; }
+    });
+  </script>
+</body>
+</html>
